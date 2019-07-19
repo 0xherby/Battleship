@@ -1,0 +1,1332 @@
+#!/bin/csh
+
+set rightChoice = 'y'
+while( $rightChoice == 'y' )
+
+	set map1 = ()
+	set map2 = ()
+
+	set counter = 1
+	while( $counter <= 100 )
+		set map1 = ( $map1 '+' )
+		@ counter ++
+	end
+
+	set counter = 1
+	while( $counter <= 100 )
+		set map2 = ( $map2 '+' )
+		@ counter ++
+	end
+	echo "--------------------------------- BattleShip Game ----------------------------------------"
+	echo
+
+	#printing script
+	set S = 1
+	set E = 10
+	set counter = 0
+	echo " 	player1 Map:					Player2 Map:			"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$counter $map1[$S-$E]"
+		echo -n "				"
+		echo $counter $map2[$S-$E]
+		@ S += 10
+		@ E += 10
+		@ counter ++
+	end
+	echo ""
+
+	# choosing a ship algorithm
+	# player1 turn
+	echo ""
+	echo "player1 turn to build his map: "
+	echo ""
+	set counter = 1
+	while ( $counter <= 3 )
+		while(1)
+		echo "	Please Choose one of the following ships: "
+		echo "	1) #	2) ###   3) ##"
+		echo "	  ###                ##"
+		echo -n "	Your choice is: "
+		set choice = $<
+		echo ""
+		if( ( $choice >= 1 && $choice <= 3 ) ) then
+			break
+		else 
+			echo ""
+			echo "	Your choice was wronge, please tye again: "
+			echo ""
+		endif
+		end
+
+		while(1)
+			echo "In which direction you want your ship to be: "
+			switch( $choice )
+				case 1:
+					while(1)
+						echo "	1) #	2) ###	3) #	4) #"
+						echo "	  ###	    #	   ##	  ##"
+						echo "	     	      	   #	   #"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice == 1 || $directionChoice == 2 || $directionChoice == 3 || $directionChoice == 4 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again ( 1 to 4 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				case 2:
+					while(1)
+						echo "	1)	#	2)	###"
+						echo "		#	"
+						echo "		#	"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice == 1 || $directionChoice == 2 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again ( 1 or 2 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				case 3:
+					while(1)
+						echo "  1) ##    2) ##   3) #    4) #"
+						echo "      ##     ##       ##     ##"
+						echo "                       #     #"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice == 1 || $directionChoice == 2 || $directionChoice == 3 || $directionChoice == 4 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again (1 to 4 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				#default:
+					#echo "	You have entered an invalid choice....."
+					#echo "	Please try again....."
+					#breaksw
+			endsw
+			break
+		end
+
+		while (1)
+			echo "	Where Do you want to put your ship ? (x,y) coordinates ? "
+			echo -n "	x coordinate = "
+			set x = $<
+			echo -n "	y coordinate = "
+			set y = $<
+			echo ""
+			if ( ( $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5 || $x == 6 || $x == 7 || $x == 8 || $x == 9 || $x == 10 ) && ( $y == 1 || $y == 2 || $y == 3 || $y == 4 || $y == 5 || $y == 6 || $y == 7 || $y == 8 || $y == 9 || $y == 10 ) ) then
+				@ middle = ( $x - 1 ) * 10 + $y
+				@ left = $middle - 1
+				@ right = $middle + 1
+				@ up = $middle - 10
+				@ down = $middle + 10
+				switch( $choice )
+					case 1:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									if( $map1[$middle] != '#' && $map1[$left] != '#' && $map1[$right] != '#' && $map1[$up] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$left] = '#'
+										set map1[$right] = '#'
+										set map1[$up] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 2:
+									if( $map1[$middle] != '#' && $map1[$left] != '#' && $map1[$right] != '#' && $map1[$down] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$left] = '#'
+										set map1[$right] = '#'
+										set map1[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 3:
+									if( $map1[$middle] != '#' && $map1[$right] != '#' && $map1[$up] != '#' && $map1[$down] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$right] = '#'
+										set map1[$up] = '#'
+										set map1[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 4:
+									if( $map1[$middle] != '#' && $map1[$left] != '#' && $map1[$right] != '#' && $map1[$up] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$left] = '#'
+										set map1[$up] = '#'
+										set map1[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	Your choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+					case 2:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									if( $map1[$middle] != '#' && $map1[$up] != '#' && $map1[$down] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$up] = '#'
+										set map1[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 2:
+									if( $map1[$middle] != '#' && $map1[$left] != '#' && $map1[$right] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$left] = '#'
+										set map1[$right] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	You choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+					case 3:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 && $down + 1 <= 100 && $down - 1 >= 1 && $right + 10 <= 100 && $left + 10 <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									@ down1 = $down + 1
+									if( $map1[$middle] != '#' && $map1[$left] != '#' && $map1[$down] != '#' && $map1[$down1] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$left] = '#'
+										set map1[$down] = '#'
+										set map1[$down1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 2:
+									@ down1 = $down - 1
+									if( $map1[$middle] != '#' && $map1[$right] != '#' && $map1[$down] != '#' && $map1[$down1] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$right] = '#'
+										set map1[$down] = '#'
+										set map1[$down1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 3:
+									@ right1 = $right + 10
+									if( $map1[$middle] != '#' && $map1[$right] != '#' && $map1[$up] != '#' && $map1[$right1] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$right] = '#'
+										set map1[$up] = '#'
+										set map1[$right1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 4:
+									@ left1 = $left + 10
+									if( $map1[$middle] != '#' && $map1[$up] != '#' && $map1[$left] != '#' && $map1[$left1] != '#' ) then
+										set map1[$middle] = '#'
+										set map1[$up] = '#'
+										set map1[$left] = '#'
+										set map1[$left1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	You choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+				endsw
+				break
+			else
+				echo ""
+				echo "	You have entered an invalid coordinates ...."
+				echo "	Please try again ....."
+				echo ""
+			endif
+		end
+	end
+
+	#printing script
+	set S = 1
+	set E = 10
+	set counter = 0
+	echo " 	Final player1 Map:					Player2 Map:			"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$counter $map1[$S-$E]"
+		echo -n "				"
+		echo $counter $map2[$S-$E]
+		@ S += 10
+		@ E += 10
+	end
+	echo ""
+	###############################################################################
+	###############################################################################
+	###############################################################################
+	#set counter = 1
+	#while( $counter <= 100 )
+	#	set map1 = ( $map1 '+' )
+	#	@ counter ++
+	#end
+
+	#set counter = 1
+	#while( $counter <= 100 )
+		#set map2 = ( $map2 '+' )
+		#@ counter ++
+	#end
+
+	echo "--------------------------------- BattleShip Game ----------------------------------------"
+	echo
+
+	#printing script
+	set S = 1
+	set E = 10
+	set counter = 0
+	echo " Final player1 Map:					Player2 Map:			"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$counter $map1[$S-$E]"
+		echo -n "				"
+		echo $counter $map2[$S-$E]
+		@ S += 10
+		@ E += 10
+		@ counter ++
+	end
+	echo ""
+
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	
+	# choosing a ship algorithm
+	# player2 turn
+	echo ""
+	echo "player2 turn to build his map: "
+	echo ""
+	set counter = 1
+	while ( $counter <= 3 )
+		while(1)
+		echo "	Please Choose one of the following ships: "
+		echo "	1) #	2) ###   3) ##"
+		echo "	  ###                ##"
+		echo -n "	Your choice is: "
+		set choice = $<
+		echo ""
+		if( ( $choice == 1 || $choice == 2 || $choice == 3 ) ) then
+			break
+		else 
+			echo ""
+			echo "	You choice was wronge, please tye again: "
+			echo ""
+		endif
+		end
+
+		while(1)
+			echo "In which direction you want your ship to be: "
+			switch( $choice )
+				case 1:
+					while(1)
+						echo "	1) #	2) ###	3) #	4) #"
+						echo "	  ###	    #	   ##	  ##"
+						echo "	     	      	   #	   #"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice >= 1 && $directionChoice <= 4 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again ( 1 to 4 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				case 2:
+					while(1)
+						echo "	1)	#	2)	###"
+						echo "		#	"
+						echo "		#	"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice == 1 || $directionChoice == 2 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again ( 1 or 2 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				case 3:
+					while(1)
+						echo "  1) ##    2) ##   3) #    4) #"
+						echo "      ##     ##       ##     ##"
+						echo "                       #     #"
+						echo -n "Enter your choice: "
+						set directionChoice = $<
+						if( $directionChoice >= 1 && $directionChoice <= 4 ) then
+							break
+						else
+							echo ""
+							echo "	You have entered an invalid direction ...."
+							echo "	Please try again (1 to 4 )....."
+							echo ""
+						endif
+					end
+					breaksw
+				#default:
+					#echo "	You have entered an invalid choice....."
+					#echo "	Please try again....."
+					#breaksw
+			endsw
+			break
+		end
+
+		while (1)
+			echo "	Where Do you want to put your ship ? (x,y) coordinates ? "
+			echo -n "	x coordinate = "
+			set x = $<
+			echo -n "	y coordinate = "
+			set y = $<
+			echo ""
+			if ( ( $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5 || $x == 6 || $x == 7 || $x == 8 || $x == 9 || $x == 10 ) && ( $y == 1 || $y == 2 || $y == 3 || $y == 4 || $y == 5 || $y == 6 || $y == 7 || $y == 8 || $y == 9 || $y == 10 ) ) then
+				@ middle = ( $x - 1 ) * 10 + $y
+				@ left = $middle - 1
+				@ right = $middle + 1
+				@ up = $middle - 10
+				@ down = $middle + 10
+				switch( $choice )
+					case 1:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									if( $map2[$middle] != '#' && $map2[$left] != '#' && $map2[$right] != '#' && $map2[$up] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$left] = '#'
+										set map2[$right] = '#'
+										set map2[$up] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+
+									endif
+								breaksw
+								case 2:
+									if( $map2[$middle] != '#' && $map2[$left] != '#' && $map2[$right] != '#' && $map2[$down] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$left] = '#'
+										set map2[$right] = '#'
+										set map2[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 3:
+									if( $map2[$middle] != '#' && $map2[$right] != '#' && $map2[$up] != '#' && $map2[$down] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$right] = '#'
+										set map2[$up] = '#'
+										set map2[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 4:
+									if( $map2[$middle] != '#' && $map2[$left] != '#' && $map2[$right] != '#' && $map2[$up] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$left] = '#'
+										set map2[$up] = '#'
+										set map2[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+											#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+										end
+										echo ""
+
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	Your choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+					case 2:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									if( $map2[$middle] != '#' && $map2[$up] != '#' && $map2[$down] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$up] = '#'
+										set map2[$down] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 2:
+									if( $map2[$middle] != '#' && $map2[$left] != '#' && $map2[$right] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$left] = '#'
+										set map2[$right] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	You choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+					case 3:
+						if( $left >= 1 && $right <= 100 && $up >= 1 && $down <= 100 && $down + 1 <= 100 && $down - 1 >= 1 && $right + 10 <= 100 && $left + 10 <= 100 ) then
+							switch( $directionChoice )
+								case 1:
+									@ down1 = $down + 1
+									if( $map2[$middle] != '#' && $map2[$left] != '#' && $map2[$down] != '#' && $map2[$down1] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$left] = '#'
+										set map2[$down] = '#'
+										set map2[$down1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 2:
+									@ down1 = $down - 1
+									if( $map2[$middle] != '#' && $map2[$right] != '#' && $map2[$down] != '#' && $map2[$down1] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$right] = '#'
+										set map2[$down] = '#'
+										set map2[$down1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 3:
+									@ right1 = $right + 10
+									if( $map2[$middle] != '#' && $map2[$right] != '#' && $map2[$up] != '#' && $map2[$right1] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$right] = '#'
+										set map2[$up] = '#'
+										set map2[$right1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+								case 4:
+									@ left1 = $left + 10
+									if( $map2[$middle] != '#' && $map2[$up] != '#' && $map2[$left] != '#' && $map2[$left1] != '#' ) then
+										set map2[$middle] = '#'
+										set map2[$up] = '#'
+										set map2[$left] = '#'
+										set map2[$left1] = '#'
+										@ counter ++
+										#printing script
+										set S = 1
+										set E = 10
+										set count = 0
+										echo " 	Final player1 Map:					Player2 Map:			"
+										echo ""
+										echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+										while( $E <= 100 )
+											echo -n "	"
+											echo -n "$count $map1[$S-$E]"
+											echo -n "				"
+											echo $count $map2[$S-$E]
+											@ S += 10
+											@ E += 10
+											@ count ++
+										end
+										echo ""
+									else
+										echo "	There is another ship in the same place....."
+										echo "	Please try again..."
+										echo ""
+									endif
+								breaksw
+							endsw
+						else
+							echo ""
+							echo "	You choice will be out of range ........"
+							echo "	Please try again ....."
+							echo ""
+							continue
+						endif
+					breaksw
+				endsw
+				break
+			else
+				echo ""
+				echo "	You have entered an invalid coordinates ...."
+				echo "	Please try again ....."
+				echo ""
+			endif
+		end
+	end
+
+	#printing script
+	set S = 1
+	set E = 10
+	set count = 0
+	echo " 	Final player1 Map:					Final Player2 Map:			"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9			 	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$count $map1[$S-$E]"
+		echo -n "				"
+		echo $count $map2[$S-$E]
+		@ S += 10
+		@ E += 10
+		@ count ++
+	end
+	echo ""
+
+	###########################################################################################
+	###########################################################################################
+	###########################################################################################
+	# Battleship statrts from here
+
+	set map3 = ()
+	set map4 = ()
+
+	set counter = 1
+	while( $counter <= 100 )
+		set map3 = ( $map3 '+' )
+		@ counter ++
+	end
+
+	set counter = 1
+	while( $counter <= 100 )
+		set map4 = ( $map4 '+' )
+		@ counter ++
+	end
+
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	
+	#printing script
+	set S = 1
+	set E = 10
+	set count = 0
+	echo " 	player1 Target Map:"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$count $map3[$S-$E]"
+		echo ""
+		@ S += 10
+		@ E += 10
+		@ count ++
+	end
+	echo ""
+	
+	echo "Player1 Get ready to start the attack"
+
+	set tries1 = 15
+	set hits1 = 0
+	set misses1 = 0
+
+	while ( $tries1 > 0 )
+			echo "	You have $tries1 Boombs last .........."
+			echo "	Player1, please choose the coordinates of the target to destroy ( x, y ): "
+			echo -n "	x coordinate = "
+			set x = $<
+			echo -n "	y coordinate = "
+			set y = $<
+			echo ""
+			if ( ( $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5 || $x == 6 || $x == 7 || $x == 8 || $x == 9 || $x == 10 ) && ( $y == 1 || $y == 2 || $y == 3 || $y == 4 || $y == 5 || $y == 6 || $y == 7 || $y == 8 || $y == 9 || $y == 10 ) ) then
+				@ middle = ( $x - 1 ) * 10 + $y
+				#@ left = $middle - 1
+				#@ right = $middle + 1
+				#@ up = $middle - 10
+				#@ down = $middle + 10
+				#@ lup = $left - 10
+				#@ ldown = $left + 10
+				#@ rup = $right - 10
+				#@ rdown = $right + 10
+						if( $middle >= 1 && $middle <= 100 ) then
+							if( $map2[$middle] == '#' ) then
+								@ hits1 ++
+								echo "	You've hit a ship ........"
+								echo "	Keep up !"
+								echo ""
+								set map3[$middle] = '#'
+								#printing script
+								set S = 1
+								set E = 10
+								set count = 0
+								echo " 	player1 Target Map:"
+								echo ""
+								echo "	# 0 1 2 3 4 5 6 7 8 9"
+								while( $E <= 100 )
+									echo -n "	"
+									echo -n "$count $map3[$S-$E]"
+									echo ""
+									@ S += 10
+									@ E += 10
+									@ count ++
+								end
+								echo ""
+							else
+								set map3[$middle] = 'X'
+								@ misses1 ++
+								echo "	You Missed it .........."
+								echo "	Try again....."
+								echo ""
+								#printing script
+								set S = 1
+								set E = 10
+								set count = 0
+								echo " 	player1 Target Map:"
+								echo ""
+								echo "	# 0 1 2 3 4 5 6 7 8 9"
+								while( $E <= 100 )
+									echo -n "	"
+									echo -n "$count $map3[$S-$E]"
+									echo ""
+									@ S += 10
+									@ E += 10
+									@ count ++
+								end
+								echo ""
+							endif
+						endif
+			else
+				echo ""
+				echo "	You have entered an invalid coordinates ...."
+				echo "	Please try again ....."
+				echo ""
+			endif
+			@ tries1 --
+	end
+
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+	echo ""
+
+	#printing script
+	set S = 1
+	set E = 10
+	set count = 0
+	echo " 	player2 Target Map:"
+	echo ""
+	echo "	# 0 1 2 3 4 5 6 7 8 9"
+	while( $E <= 100 )
+		echo -n "	"
+		echo -n "$count $map4[$S-$E]"
+		echo ""
+		@ S += 10
+		@ E += 10
+		@ count ++
+	end
+	echo ""
+	
+	set tries2 = 15
+	set hits2 = 0
+	set misses2 = 0
+
+	while ( $tries2 > 0 )
+			echo "	You have $tries2 Boombs last .........."
+			echo "	Player2, please choose the coordinates of the target to destroy ( x, y ): "
+			echo -n "	x coordinate = "
+			set x = $<
+			echo -n "	y coordinate = "
+			set y = $<
+			echo ""
+			if ( ( $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5 || $x == 6 || $x == 7 || $x == 8 || $x == 9 || $x == 10 ) && ( $y == 1 || $y == 2 || $y == 3 || $y == 4 || $y == 5 || $y == 6 || $y == 7 || $y == 8 || $y == 9 || $y == 10 ) ) then
+				@ middle = ( $x - 1 ) * 10 + $y
+				#@ left = $middle - 1
+				#@ right = $middle + 1
+				#@ up = $middle - 10
+				#@ down = $middle + 10
+				#@ lup = $left - 10
+				#@ ldown = $left + 10
+				#@ rup = $right - 10
+				#@ rdown = $right + 10
+						if( $middle >= 1 && $middle <= 100 ) then
+							if( $map1[$middle] == '#' ) then
+								@ hits2 ++
+								echo "	You've hit a ship ........"
+								echo "	Keep up !"
+								echo ""
+								set map4[$middle] = '#'
+								#printing script
+								set S = 1
+								set E = 10
+								set count = 0
+								echo " 	player2 Target Map:"
+								echo ""
+								echo "	# 0 1 2 3 4 5 6 7 8 9"
+								while( $E <= 100 )
+									echo -n "	"
+									echo -n "$count $map4[$S-$E]"
+									echo ""
+									@ S += 10
+									@ E += 10
+									@ count ++
+								end
+								echo ""
+							else
+								set map4[$middle] = 'X'
+								@ misses2 ++
+								echo "	You Missed it .........."
+								echo "	Try again....."
+								echo ""
+								#printing script
+								set S = 1
+								set E = 10
+								set count = 0
+								echo " 	player2 Target Map:"
+								echo ""
+								echo "	# 0 1 2 3 4 5 6 7 8 9"
+								while( $E <= 100 )
+									echo -n "	"
+									echo -n "$count $map4[$S-$E]"
+									echo ""
+									@ S += 10
+									@ E += 10
+									@ count ++
+								end
+								echo ""
+							endif
+						endif
+			else
+				echo ""
+				echo "	You have entered an invalid coordinates ...."
+				echo "	Please try again ....."
+				echo ""
+			endif
+			@ tries2 --
+	end
+
+	echo ""
+	echo ""
+	echo "	The final scores are:"
+	echo -n "Player1 hits: "
+	echo $hits1
+	echo -n "Player1 misses: "
+	echo $misses1
+	echo ""
+	echo -n "Player2 hits: "
+	echo $hits2
+	echo -n "Player2 misses: "
+	echo $misses2
+
+
+	if( $hits1 > $hits2 ) then
+		echo "	Player1 wins..........."
+	else if( $hits1 < $hits2 ) then
+		echo "	Player2 wins..........."
+	else
+		echo "	I guess we have a tie in here......................"
+		echo "	Goodluck for everybody........."
+	endif
+
+	echo ""
+		while(1)
+			echo -n "		Nice game,	Wanna play again ( y, n ): " 
+			set choice = $<
+			if( $choice == 'y' || $choice == 'n' ) then
+				set rightChoice = $choice
+				break
+			else
+				echo ""
+				echo " Error, Please try again.... "
+				echo ""
+			endif
+		end
+end
